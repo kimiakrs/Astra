@@ -17,7 +17,7 @@ faults and performing root cause analysis (RCA) in a microservice-based social n
 
 ---
 
-## Quick Start (Kaggle)
+## Quick Start (Goolge Colab)
 
 1. **Open the notebook**: In Google Colab or Locally in your computer
 2. **Add datasets** (see [Dataset section](#dataset) for details):
