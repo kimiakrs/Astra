@@ -6,8 +6,13 @@ faults and performing root cause analysis (RCA) in a microservice-based social n
 
 [![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-orange.svg)](https://pytorch.org/)
+[![Multimodal](https://img.shields.io/badge/Multimodal-Logs%20%7C%20Metrics%20%7C%20Traces-darkblue.svg)](#)
 [![Transformer](https://img.shields.io/badge/Architecture-Transformer-red.svg)](https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html)
-[![Dataset](https://img.shields.io/badge/Dataset-Zenodo-blue.svg)](https://zenodo.org/records/7615394)
+[![Fusion](https://img.shields.io/badge/Cross--Modal-Fusion-purple.svg)](#)
+[![Temporal Modeling](https://img.shields.io/badge/Temporal-Sequence%20Learning-green.svg)](#)
+[![Interpretability](https://img.shields.io/badge/Explainability-Attention%20Analysis-yellow.svg)](#)
+[![AIOps](https://img.shields.io/badge/AIOps-Anomaly%20%26%20RCA-blue.svg)](#)
+[![Dataset](https://img.shields.io/badge/Dataset-Zenodo-pink.svg)](https://zenodo.org/records/7615394)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
