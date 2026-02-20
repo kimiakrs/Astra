@@ -326,6 +326,24 @@ are saved in the following directory of this repository:[`ASTRA-Results`](ASTRA-
      in the notebook comments/markdown (sections marked as main blocks).
 
 ---
+---
+
+## Future Work
+
+
+- [x] Multimodal temporal transformer architecture
+- [x] Implemented Cross-modal fusion under noisy and imbalanced data
+- [x] Temporal–structural modeling of service interactions
+- [x] Fault propagation interpretability across microservices
+- [x] Attention-based root cause localization
+- [ ] Large-scale microservice environments
+- [ ] Dynamic scaling & evolving dependency graphs
+- [ ] Expanded failure scenarios
+- [ ] Real-time online monitoring integration
+- [ ] Distributed / low-latency inference optimization
+- [ ] Proactive anomaly detection & decision support for SRE
+
+---
 
 ## Citation
 When you use this dataset in your research or project, please cite the original paper
