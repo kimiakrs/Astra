@@ -17,7 +17,7 @@ faults and performing root cause analysis (RCA) in a microservice-based social n
 1. **Open the notebook**: In Google Colab or Locally in your computer
 2. **Add datasets** (see [Dataset section](#dataset) for details):
 3. **Enable GPU** in notebook settings (T4 x2 or higher)
-4. **Run all cells** Some parts are not necessary to be runned
+4. **Run all cells** Some parts are not necessary to run
 
 ---
 
@@ -30,7 +30,7 @@ faults and performing root cause analysis (RCA) in a microservice-based social n
 - [Environment and Requirements](#environment-and-requirements)
 - [Research Questions](#research-questions)
 - [Notebook Structure](#notebook-structure)
-- [How to Run in Google Colab](#how-to-run-in-google-colab)
+- [Run in Google Colab](#run-in-google-colab)
 - [Citation](#citation)
 - [License](#license)
 
@@ -203,19 +203,19 @@ pip install torch numpy pandas matplotlib seaborn scikit-learn scipy tqdm interv
 ## Research Questions
 This project is structured around the following research questions:
 
-- **RQ1:** How effectively can a temporal multimodal transformer detect anomalies and localize  
+* **RQ1:** How effectively can a temporal multimodal transformer detect anomalies and localize  
   root causes in microservice-based systems?
-- **RQ2:** How do temporal dependencies between metrics, logs and traces evolve under different  
+* **RQ2:** How do temporal dependencies between metrics, logs and traces evolve under different  
   fault types, and how reliably do they capture fault propagation patterns?
-- **RQ3:** How robust is adaptive multimodal fusion in improving precision when data sources  
+* **RQ3:** How robust is adaptive multimodal fusion in improving precision when data sources  
   are noisy, incomplete or partially missing?
-- **RQ4:** To what extent can the proposed framework perform instance-level root cause analysis  
+* **RQ4:** To what extent can the proposed framework perform instance-level root cause analysis  
   and diagnostic reasoning that matches real fault propagation behavior?
-- **RQ5:** How useful is an explicit causal graph for analyzing multimodal root causes across  
+* **RQ5:** How useful is an explicit causal graph for analyzing multimodal root causes across  
   different microservice topologies?
-- **RQ6:** Do transformer-based models capture long-range failure chains more effectively than  
+* **RQ6:** Do transformer-based models capture long-range failure chains more effectively than  
   graph-based baselines?
-- **RQ7:** How well does a transformer-based multimodal RCA model scale, in both performance  
+* **RQ7:** How well does a transformer-based multimodal RCA model scale, in both performance  
   and training efficiency, as the number of services increases?
 
 ---
@@ -224,29 +224,29 @@ This project is structured around the following research questions:
 High-level sections of `ASTRA_Final.ipynb`:
 
 ### 1. Setup and Data Access
-- Mount Google Drive:
+* Mount Google Drive:
   ```python
   from google.colab import drive
   drive.mount('/content/drive')
   ```
-- Navigate to the dataset directory:
+* Navigate to the dataset directory:
   ```
   /content/drive/MyDrive/Anomaly-RC-Dataset/
   ```
-- List available runs, metrics, traces, logs and preprocessed/model files.
+* List available runs, metrics, traces, logs and preprocessed/model files.
 
 ### 2. Log / Metric / Trace Loading and Preprocessing
-- Define and load metrics, traces and logs files (faulty and no-fault runs).
-- Perform temporal alignment so that all three modalities and fault intervals share a common timeline.
-- Build sliding-window sequences over time; for each modality, this demonstrates 11,247 windows per service (shape approximately `[11247, 12]`).
-- Normalize each modality separately (metrics, logs, traces).
-- Encode each modality with an MLP into 32-dimensional embeddings, producing:
+* Define and load metrics, traces and logs files (faulty and no-fault runs).
+* Perform temporal alignment so that all three modalities and fault intervals share a common timeline.
+* Build sliding-window sequences over time; for each modality, this demonstrates 11,247 windows per service (shape approximately `[11247, 12]`).
+* Normalize each modality separately (metrics, logs, traces).
+* Encode each modality with an MLP into 32-dimensional embeddings, producing:
   ```
   metrics: [12, num_windows, 32]
   traces:  [12, num_windows, 32]
   logs:    [12, num_windows, 32]
   ```
-- Apply chunking of windows and a careful sliding-window sampling strategy.
+* Apply chunking of windows and a careful sliding-window sampling strategy.
   ```
   metrics: [2748, 12, 256, 32]
   traces:  [2748, 12, 256, 32]
@@ -254,24 +254,24 @@ High-level sections of `ASTRA_Final.ipynb`:
   ```
 
 ### 3. Fault and RCA Label Construction
-- Construct a fault label tensor with shape `[2748, 256, 12]`, indicating for each window and service whether a fault is present (any of CPU overload, network delay, packet loss).
-- Construct an RCA label tensor with shape `[2748, 256, 12, 3]`, one-hot over the three fault types per service.
-- Ensure labels are aligned with the multimodal windows and fault-injection episodes.
+* Construct a fault label tensor with shape `[2748, 256, 12]`, indicating for each window and service whether a fault is present (any of CPU overload, network delay, packet loss).
+* Construct an RCA label tensor with shape `[2748, 256, 12, 3]`, one-hot over the three fault types per service.
+* Ensure labels are aligned with the multimodal windows and fault-injection episodes.
 
 ### 4. Datasets and DataLoaders
-- Split windows into train/validation/test sets in a way that avoids leakage between splits and respects the distribution of fault episodes.
-- Define `FaultDataset` and related dataset classes to return:
+* Split windows into train/validation/test sets in a way that avoids leakage between splits and respects the distribution of fault episodes.
+* Define `FaultDataset` and related dataset classes to return:
   ```
   (Xm, Xt, Xl, Y_fault)
   ```
   and corresponding RCA labels where needed.
-- Build PyTorch DataLoader for Stage-1 and Stage-2.
-- Use `WeightedRandomSampler` in the training DataLoader to handle class imbalance without oversampling into validation or test.
+* Build PyTorch DataLoader for Stage-1 and Stage-2.
+* Use `WeightedRandomSampler` in the training DataLoader to handle class imbalance without oversampling into validation or test.
 
 ### 5. Fault Detection
-- Construct binary labels per window indicating whether any service in that window is faulty.
-- Perform stratified train/validation/test splits over windows.
-- Define the Stage-1 model:
+* Construct binary labels per window indicating whether any service in that window is faulty.
+* Perform stratified train/validation/test splits over windows.
+* Define the Stage-1 model:
   ```
   MultiServiceTransformerMidFusionMultiHead
   ```
@@ -280,23 +280,28 @@ High-level sections of `ASTRA_Final.ipynb`:
   ```
   best_stage1_crossmodal_6Dec.pt
   ```
-- Collect logits and labels on validation/test sets.
-- Tune a decision threshold in logit space to maximize F1.
-- Report metrics including precision, recall, F1 and accuracy at both global and per-service levels.
+* Collect logits and labels on validation/test sets.
+* Tune a decision threshold in logit space to maximize F1.
+* Report metrics including precision, recall, F1 and accuracy at both global and per-service levels.
 
 ### 7. Analysis, Ranking and Visualization
-- Summarize service rankings and RCA scores across fault scenarios  
+* Summarize service rankings and RCA scores across fault scenarios  
   to assess how well the model identifies root causes and impacted services (RQ1).
-- Visualize temporal fault propagation and service activations using time-series plots to  
+* Visualize temporal fault propagation and service activations using time-series plots to  
   study how faults evolve across services (RQ2).
-- Demonstrates modality-fusion weights to find out adaptive fusion method under noisy and imbalanced modality (RQ3).
-- Focusing on Interpretability and human vs RCA agreement by visualizing diagrams and attention attribution (RQ4).
-- Generate additional plots such as heatmaps, attention maps, and causal/graph-based views —  
+* Demonstrates modality-fusion weights to find out adaptive fusion method under noisy and imbalanced modality (RQ3).
+* Focusing on Interpretability and human vs RCA agreement by visualizing diagrams and attention attribution (RQ4).
+* Generate additional plots such as heatmaps, attention maps, and causal/graph-based views —  
   to interpret learned dependencies, compare with graph-based baselines, and analyze scalability across different service topologies (RQ5, RQ6, RQ7).
+
+  *All analysis outputs, rankings, and visualization artifacts generated in this stage  
+(e.g., service ranking tables, attention visualizations, heatmaps, and plots)  
+are saved in the following directory of this repository:[`ASTRA-Results`](ASTRA-Figures/)*
+
 
 ---
 
-## How to Run in Google Colab
+## Run in Google Colab
 1. Upload `ASTRA_Final.ipynb` to Google Colab, or open it directly from Google Drive.
 2. Mount Google Drive:
    ```python
